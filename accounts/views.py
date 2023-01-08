@@ -5,10 +5,11 @@ from .models import User, UserProfile
 from django.contrib import messages
 from vendor.forms import VendorForm
 from django.contrib import messages, auth
-from .utils import detectUser, check_role_vendor, check_role_customer, send_verification, decode_and_return_user
+from .utils import detectUser, check_role_vendor, check_role_customer, send_verification
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
+from vendor.models import Vendor
 
 # Create your views here.
 def registerUser(request):
@@ -33,7 +34,10 @@ def registerUser(request):
             user.role = User.CUSTOMER
             user.save()
 
-            send_verification(request, user)
+            # Send verification email
+            mail_subject = 'Please activate your account'
+            email_template = 'accounts/emails/account_verification_email.html'
+            send_verification(request, user, mail_subject, email_template)
 
             print('User is created')
             messages.success(request, 'Your account has been registered sucessfully!')
@@ -139,7 +143,11 @@ def vendorDashboard(request):
 
 
 def activate(request, uidb64, token):
-    user = decode_and_return_user(request, uidb64, token)
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(ValueError, TypeError, OverflowError, User.DoesNotExist):
+        user = None
 
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True

@@ -9,15 +9,12 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 
 
-
-def decode_and_return_user(request, uidb64, token):
-    user = None
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User._default_manager.get(pk=uid)
-    except(ValueError, TypeError, OverflowError, User.DoesNotExist):
-        user = None
-    return user    
+def send_notification(mail_subject, mail_template, context):
+    from_email = settings.DEFAULT_FROM_EMAIL
+    message = render_to_string(mail_template, context)
+    to_email = context['user'].email
+    mail = EmailMessage(mail_subject, message, from_email, to=[to_email])
+    mail.send()
 
 
 def send_verification(request, user, mail_subject, email_template):
