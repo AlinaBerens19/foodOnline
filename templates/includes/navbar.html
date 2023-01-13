@@ -32,7 +32,11 @@
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
           <div class="login-option">
             {% if user.is_authenticated %}
+            {% if user.role == 2 %}
             <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'custDashboard' %}">My account</a>
+            {% else %}
+            <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'vendorDashboard' %}">My account</a>
+            {% endif %}
             <a class="cs-color cs-popup-joinus-btn login-popup text-danger" href="{% url 'logout' %}">Logout</a>
             {% else %}
             <a class="cs-color cs-popup-joinus-btn login-popup" href="{% url 'login' %}">Login</a> /
