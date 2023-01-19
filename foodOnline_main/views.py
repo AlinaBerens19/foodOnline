@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from accounts import views
 from vendor.models import Vendor
-from marketplace.views import cart
+from marketplace.views import cart, search
 
 
 def home(request):
