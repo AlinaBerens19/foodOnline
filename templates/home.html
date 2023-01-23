@@ -88,6 +88,7 @@
 								<ul>
 									{% for vendor in vendors %}
 									<li class="has-border">
+
 										<figure>
 											{% if vendor.user_profile.profile_pictures %}
 											<a href="{% url 'vendor_detail' vendor.vendor_slug %}"><img src="{{vendor.user_profile.profile_pictures.url}}" class="attachment-full size-full wp-post-image" alt=""></a>
@@ -95,6 +96,7 @@
 											<a href="{% url 'vendor_detail' vendor.vendor_slug %}"><img src="{% static 'images/default-profiles.png' %}" class="attachment-full size-full wp-post-image" alt=""></a>
 											{% endif %}
 										</figure>
+
 									</li>
 									{% endfor %}
 								</ul>
@@ -124,6 +126,7 @@
 									<li class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 										<div class="list-post featured">
 											<div class="img-holder">
+
 												<figure>
 													{% if vendor.user_profile.profile_pictures %}
 													<a href="{% url 'vendor_detail' vendor.vendor_slug %}"><img src="{{vendor.user_profile.profile_pictures.url}}" class="img-thumb wp-post-image" alt=""></a>
@@ -131,9 +134,13 @@
 													<a href="{% url 'vendor_detail' vendor.vendor_slug %}"><img src="{% static 'images/default-profile.png'%}" class="img-thumb wp-post-image" alt=""></a>
 													{% endif %}
 												</figure>
-												<span class="restaurant-status close">
-													<em class="bookmarkRibbon"></em>Close
-												</span>
+
+												{% if vendor.is_open %}
+													<span class="restaurant-status open"><em class="bookmarkRibbon"></em>Open</span>
+												{% else %}
+													<span class="restaurant-status close"><em class="bookmarkRibbon"></em>Close</span>
+												{% endif %}
+
 											</div>
 											<div class="text-holder">
 												<div class="list-rating">
