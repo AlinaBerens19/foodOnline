@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	<!-- Main Section Start -->
+		<div class="main-section">
+			<!-- Home Pages Elements Strat -->
+			<!-- Main Search Start -->
+			<div class="page-section nopadding cs-nomargin" style="padding-top: 200px; padding-bottom: 150px; margin-bottom: 0px; background: url({% static 'extra-images/bg-image1.jpg' %}) no-repeat center / cover;">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+							<div class="element-title">
+								<h1 style="font-size: 40px; color: #505050; text-transform: uppercase; line-height: 50px; margin-bottom: 25px; text-align:center;">
+									We are in the business of food<br>our restaurants do</h1>
+								<p style="font-size: 18px; letter-spacing: 1px; color: #505050; text-align:center;">
+									Ridiculus sociosqu
+									cursus neque cursus curae ante scelerisque vehicula.</p>
+							</div>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+							<div class="main-search fancy bg-holder">
+								<form action="{% url 'search' %}" method="GET">
+									<div class="row">
+										<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+											<div class="field-holder">
+												<input type="text" name="restaurant_name" placeholder="Restaurant name">
+											</div>
+										</div>
+										<div class="col-lg-4 col-md-4 col-sm-5 col-xs-12">
+											<div class="field-holder">
+												<ul>
+													<li class="select-location">
+														<div class="foodbakery-locations-fields-group foodbakery-focus-out">
+															<span class="foodbakery-search-location-icon"><i class="icon-location"></i></span>
+															<input type="text" class="location-field-text filter" id="id_address" required placeholder="All Locations">
+														</div>
+
+													</li>
+												</ul>
+											</div>
+										</div>
+										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+											<div class="field-holder">
+												<input type="submit" value="Search">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!-- Main Search End -->
+
+			<!-- Top Restarurants Section Start -->
+			<div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 60px;padding-bottom: 0px;margin-bottom: 0px;background: #ffffff;">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="element-title align-left">
+								<h2>Top Restaurants</h2>
+								<p>Explore restaurants, bars, and cafés by locality</p>
+							</div>
+						</div>
+
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-right: 0 !important; padding-left: 0 !important;">
+							<div class="company-logo">
+								<ul>
+									{% for vendor in vendors %}
+									<li class="has-border">
+										<figure>
+											{% if vendor.user_profile.profile_pictures %}
+											<a href="#"><img src="{{vendor.user_profile.profile_pictures.url}}" class="attachment-full size-full wp-post-image" alt=""></a>
+											{% else %}
+											<a href="#"><img src="{% static 'images/default-profiles.png' %}" class="attachment-full size-full wp-post-image" alt=""></a>
+											{% endif %}
+										</figure>
+									</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+			<!-- Top Restarurants Section End -->
+			<!-- Choose From Most Popular Listin Start -->
+			<div class="page-section nopadding cs-nomargin" style="margin-top: 0px;padding-top: 60px;padding-bottom: 50px;margin-bottom: 0px;background: #ffffff;">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="element-title align-center">
+								<h2>Choose From Most Popular Restaurants</h2>
+								<p>Cum doctus civibus efficiantur in imperdiet deterruisset.</p>
+							</div>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<div class="listing fancy">
+								<ul class="row">
+
+									{% for vendor in vendors %}
+									<li class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+										<div class="list-post featured">
+											<div class="img-holder">
+												<figure>
+													{% if vendor.user_profile.profile_pictures %}
+													<a href="#"><img src="{{vendor.user_profile.profile_pictures.url}}" class="img-thumb wp-post-image" alt=""></a>
+													{% else %}
+													<a href="#"><img src="{% static 'images/default-profile.png'%}" class="img-thumb wp-post-image" alt=""></a>
+													{% endif %}
+												</figure>
+												<span class="restaurant-status close">
+													<em class="bookmarkRibbon"></em>Close
+												</span>
+											</div>
+											<div class="text-holder">
+												<div class="list-rating">
+													<div class="rating-star">
+														<span class="rating-box" style="width: 100%;"></span>
+													</div>
+													<span class="reviews">(1)</span>
+												</div>
+												<div class="post-title">
+													<h5>
+														<a href="listing-detail.html">{{vendor.vendor_name}}</a>
+														<span class="sponsored text-color">Sponsored</span>
+													</h5>
+												</div>
+												<address>
+													<span>
+														{% if vendor.user_profile.address %}
+														{{vendor.user_profile.city}}, {{vendor.user_profile.state}}, {{vendor.user_profile.pin_code}}
+														{% endif %}
+													</span>
+												 </address>
+											</div>
+										</div>
+									</li>
+									{% endfor %}
+
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Choose From Most Popular Listing End -->
+
+			<!-- Home Pages Elements End  -->
+		</div>
+		<!-- Main Section End -->
+
+	</div>
+
+
+</body>
+
+</html>
+{% endblock %}
