@@ -135,7 +135,7 @@ def myAccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)
 def custDashboard(request):
-    return render(request, 'accounts/custDashboard.html')
+    return render(request, 'customers/custDashboard.html')
 
 
 @login_required(login_url='login')

@@ -80,7 +80,7 @@ def add_category(request):
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
-            category.vendor = Vendor.objects.get(user=request.user)
+            category.vendor = get_vendor(request)
 
             category.save()
             category.slug = slugify(category_name)+'-'+slugify(category.id)
@@ -110,7 +110,7 @@ def edit_category(request, pk=None):
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
-            category.vendor = Vendor.objects.get(user=request.user)
+            category.vendor = get_vendor(request)
             category.slug = slugify(category_name)
             form.save()
             messages.success(request, 'Category updated successfully!')
@@ -139,7 +139,7 @@ def delete_category(request, pk=None):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def add_food(request):
-    vendor = Vendor.objects.get(user=request.user)
+    vendor = get_vendor(request)
     if request.method == "POST":
         form = FoodItemForm(request.POST, request.FILES)
         if form.is_valid():
@@ -166,7 +166,7 @@ def add_food(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def edit_food(request, pk=None):
-    vendor = Vendor.objects.get(user=request.user)
+    vendor = get_vendor(request)
     food = get_object_or_404(FoodItem, pk=pk)
     if request.method == 'POST':
         form = FoodItemForm(request.POST, request.FILES, instance=food)
@@ -202,7 +202,7 @@ def delete_food(request, pk=None):
 
 
 def opening_hours(request):
-    opening_hours = OpeningHour.objects.filter(vendor=Vendor.objects.get(user=request.user))
+    opening_hours = OpeningHour.objects.filter(vendor=get_vendor(request))
     stuff_in_string = "Opening Hours - %s." % (opening_hours)
     form = OpeningHourForm()
 
@@ -224,7 +224,7 @@ def add_opening_hours(request):
             is_closed = request.POST.get('is_closed')
 
             try:
-                hour = OpeningHour.objects.create(vendor=Vendor.objects.get(user=request.user), day=day, from_hour=from_hour, to_hour=to_hour, is_closed=is_closed)
+                hour = OpeningHour.objects.create(vendor=get_vendor(request), day=day, from_hour=from_hour, to_hour=to_hour, is_closed=is_closed)
                 print('Hour - ', hour)
                 if(hour):
                     day = OpeningHour.objects.get(id=hour.id)
