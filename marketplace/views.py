@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from orders.forms import OrderForm
 from vendor.models import Vendor
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
@@ -13,6 +14,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D # ``D`` is a shortcut for ``Distance``
 from django.contrib.gis.db.models.functions import Distance
 from datetime import date, datetime
+
 
 
 def is_ajax(request):
@@ -173,4 +175,9 @@ def search(request):
 
 
 def checkout(request):
-    return render(request, 'marketplace/checkout.html')        
+    form = OrderForm()
+
+    context = {
+        'form': form,        
+    }
+    return render(request, 'marketplace/checkout.html', context)        
