@@ -25,10 +25,13 @@ urlpatterns = [
     # path('', views.myAccount),
     path('admin/', admin.site.urls),
     path('', views.home, name = 'home'),
-    path('cart/', views.cart, name = 'cart'),
 
+    # CART
+    path('cart/', views.cart, name = 'cart'),
     # SEARCH
     path('search/', views.search, name="search"),
+    # CHECKOUT
+    path('checkout/', views.checkout, name='checkout'),
 
     path('', include('accounts.urls')),
     path('vendor/', include('vendor.urls')),

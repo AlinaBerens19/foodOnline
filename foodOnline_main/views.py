@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from accounts import views
 from vendor.models import Vendor
-from marketplace.views import cart, search
+from marketplace.views import cart, search, checkout
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D # ``D`` is a shortcut for ``Distance``
 from django.contrib.gis.db.models.functions import Distance
