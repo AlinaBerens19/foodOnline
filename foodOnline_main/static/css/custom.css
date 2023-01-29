@@ -5,6 +5,10 @@
     100% {bottom: -100%}
 }
 
+#home {
+    padding-bottom: 50px;
+}
+
 .show-notification{
     position: fixed;
     bottom: 100%;
@@ -34,3 +38,25 @@ table > tbody > tr > td{
 .col-md-3.set_as_closed{
     padding: 5px 15px 5px 15px;
 }
+
+/* hide radio button */
+.payment-method [type=radio]{
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Image style */
+.payment-method [type=radio] + img{
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* Checked style */
+.payment-method [type=radio]:checked + img{
+    outline: 2px solid #ff0000;
+}
+
+
+
