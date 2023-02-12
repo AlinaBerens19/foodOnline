@@ -43,4 +43,7 @@ urlpatterns = [
     # CUSTOMERS
     path('customer/', include('customers.urls')),
 
+    # VENDORS
+    path('vendor/', include('vendor.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

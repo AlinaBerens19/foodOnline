@@ -27,6 +27,16 @@
 	<script src="{% static 'js/modernizr.js' %}"></script>
 	<script src="{% static 'js/bootstrap.js' %}"></script>
 
+	<!-- Include Database plugin script and css -->
+	<link rel="stylesheet" href="//cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css">
+	<script src="//cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+	<script>
+		$(document).ready( function () {
+			$('#ordersTable').DataTable();
+		} );
+	</script>
+
+
 	<!-- PAYPAL integration -->
 	<script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID }}&currency=USD"></script>
 

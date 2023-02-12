@@ -1,16 +1,19 @@
+from datetime import datetime
 import json
 from decimal import *
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from marketplace.context_processors import get_cart_amount
-from marketplace.models import Cart
+from marketplace.models import Cart, Tax
+from menu.models import FoodItem
 from orders.forms import OrderForm
 from orders.models import Order, Payment, OrderedFood
 from orders.utils import generate_order_number
 from django.contrib.auth.decorators import login_required
 from accounts.utils import send_notification
-
-
+from vendor.models import Vendor
+from django.contrib.sites.shortcuts import get_current_site
+from .utils import order_total_by_vendor
 
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -30,6 +33,41 @@ def place_order(request):
 
     if cart_counts <= 0:
         return redirect('marketplace')
+
+    vendor_ids = []
+    for i in cart_items:
+        if i.fooditem.vendor.id not in vendor_ids:
+            vendor_ids.append(i.fooditem.vendor.id)  
+
+    # The Json Model for saving tax info about Order per each Vendor
+    # {"vendor_id": {"subtotal": {"tax_type": {"tax_percentage": "tax_amount"}}}}        
+    get_tax = Tax.objects.filter(is_active=True)
+    subtotal = 0
+    total_data = {}
+    k = {}
+
+    for i in cart_items:
+        fooditem = FoodItem.objects.get(pk=i.fooditem.id, vendor_id__in=vendor_ids)
+        v_id = fooditem.vendor.id
+        if v_id in k:
+            subtotal += (fooditem.price * i.quantity)
+            k[v_id] = subtotal
+        else:
+            subtotal = (fooditem.price * i.quantity)
+            k[v_id] = subtotal
+            print("Vendor ID: ", v_id, " - Vendor name: ", Vendor.objects.get(pk=v_id))
+        
+        print("Subtotal: ", k)    
+
+        # Update tax information
+        tax_dict = {}
+        for i in get_tax:
+            tax_amount = round((i.tax_percentage * subtotal)/100, 2)
+            tax_dict.update({i.tax_type: {str(i.tax_percentage): str(tax_amount)}})    
+
+        # Construct total data
+        total_data.update({fooditem.vendor.id: {str(subtotal): str(tax_dict)}})
+        print("TOTAL DATA==> ", total_data)
 
     subtotal = get_cart_amount(request)['subtotal']
     total_tax = get_cart_amount(request)['tax']
@@ -51,11 +89,13 @@ def place_order(request):
             order.pin_code = form.cleaned_data['pin_code']
             order.user = request.user
             order.total = grand_total
+            order.total_data = json.dumps(total_data)
             order.tax_data = json.dumps(tax_data, cls=DecimalEncoder)
             order.total_tax = total_tax
             order.payment_method = request.POST['payment_method']
             order.save() # order id/ pk is generated
             order.order_number = generate_order_number(order.id)
+            order.vendors.add(*vendor_ids)
             order.save()
 
             print('ORDER TOTAL FROM ORDER==> ', order.total)
@@ -124,13 +164,28 @@ def payments(request):
         # SEND ORDER CONFIRMATION EMAIL TO CUSTOMER
         mail_subject = 'Thank you for ordering with us'
         mail_template = 'orders/order_confirmation_email.html'
+        
+        orderedfood = OrderedFood.objects.filter(order=order)
+        customer_subtotal = 0
+        for i in orderedfood:
+            customer_subtotal += (i.price * i.quantity)
+        tax_data = json.loads(order.tax_data)    
+
         context = {
             'user': request.user,
             'order': order,
             'to_email': order.email,
+            'orderedfood': orderedfood,
+            'domain': get_current_site(request),
+            'customer_subtotal': customer_subtotal,
+            'tax_data': tax_data,
         }
 
-        send_notification(mail_subject, mail_template, context)
+        try:
+            send_notification(mail_subject, mail_template, context)
+        except Exception as e:
+            print(e)
+
 
         # SEND ORDER RECEIVED EMAIL TO VENDOR
         mail_subject = 'You have received new order'
@@ -139,20 +194,28 @@ def payments(request):
 
         for i in cart_items:
             if i.fooditem.vendor.user.email not in to_emails:
-                to_emails.append(i.fooditem.vendor.user.email)
+                to_emails.append(i.fooditem.vendor.user.email)    
 
-        print('VENDORS EMAILS==> ', to_emails)        
+                ordered_food_for_vendor = OrderedFood.objects.filter(order=order, fooditem__vendor=i.fooditem.vendor)
+                print('ORDERED FOOD FOR VENDOR ==> ', ordered_food_for_vendor)
 
-        context = {
-            'user': request.user,
-            'order': order,
-            'to_email': to_emails,
-        }
+                context = {
+                    'user': request.user,
+                    'order': order,
+                    'to_email': to_emails,
+                    'ordered_food_for_vendor': ordered_food_for_vendor,
+                    'vendor_subtotal': order_total_by_vendor(order, i.fooditem.vendor.id)['subtotal'],
+                    'tax_data': order_total_by_vendor(order, i.fooditem.vendor.id)['tax_dict'],
+                    'vendor_grand_total': order_total_by_vendor(order, i.fooditem.vendor.id)['grand_total'],
+                }
 
-        send_notification(mail_subject, mail_template, context)
+        try:
+            send_notification(mail_subject, mail_template, context)
+        except Exception as e:
+            print(e)
 
         # CLEAR THE CART IF THE PAYMENT IS SUCCESS
-        # cart_items.delete()
+        cart_items.delete()
 
         # RETURN BACK TO AJAX IF THE PAYMENT IS SUCCESSFUL
         response = {

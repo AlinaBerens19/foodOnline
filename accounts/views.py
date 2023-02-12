@@ -1,5 +1,8 @@
+import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
+from orders.models import Order
 from .forms import UserForm
 from .models import User, UserProfile
 from django.contrib import messages
@@ -135,13 +138,46 @@ def myAccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_role_customer)
 def custDashboard(request):
-    return render(request, 'customers/custDashboard.html')
+    orders = Order.objects.filter(user=request.user)
+    recent_orders = Order.objects.filter(user=request.user)[:5]
+    orders_count = orders.count()
+
+    context = {
+        'orders': orders,
+        'recent_orders': recent_orders,
+        'orders_count': orders_count,
+    }
+
+    return render(request, 'customers/custDashboard.html', context)
 
 
 @login_required(login_url='login')
 @user_passes_test(check_role_vendor)
 def vendorDashboard(request):
-    return render(request, 'accounts/vendorDashboard.html')
+    vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True).order_by('-created_at')
+    recent_orders = orders[:10]
+
+    # current month orders
+    current_month = datetime.datetime.now().month
+    total_month_revenue = 0
+    current_month_orders = orders.filter(created_at__month=current_month, vendors__in=[vendor.id], is_ordered=True)
+    for i in current_month_orders:
+        total_month_revenue += i.get_total_by_vendor()['grand_total']
+
+    # total revenue
+    total_revenue = 0
+    for i in orders:
+        total_revenue += i.get_total_by_vendor()['grand_total']
+
+    context = {
+        'orders': orders,
+        'orders_count': orders.count(),
+        'recent_orders': recent_orders,
+        'total_revenue': total_revenue,
+        'total_month_revenue': total_month_revenue,
+    }
+    return render(request, 'accounts/vendorDashboard.html', context)
 
 
 def activate(request, uidb64, token):
