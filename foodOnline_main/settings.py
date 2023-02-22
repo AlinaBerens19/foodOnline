@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['143.42.63.251', '127.0.0.1', 'nightlifeisrael.com', 'www.nightlifeisrael.com']
 
 
 # Application definition

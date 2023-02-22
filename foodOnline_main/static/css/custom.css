@@ -59,4 +59,25 @@ table > tbody > tr > td{
 }
 
 
+.main-search-bar{
+    padding-top: 200px !important;
+    padding-bottom: 150px !important;
+    background-position: center !important;
+}    
+ 
+
+@media only screen and (max-width: 480px) {
+    a.get-start-btn{
+        display: block;
+        margin-top: 15px !important;
+        margin-left: 0 !important;
+    }
+    .main-search-bar{
+        padding-top: 50px !important;
+        padding-bottom: 50px !important;
+        background-position: left !important;
+    }
+}
+
+
 

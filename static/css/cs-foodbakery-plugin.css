@@ -732,7 +732,7 @@ ul.sub-nav li a { line-height: 20px; }
 .menu-itam-holder .field-holder.sticky-search { z-index: 1; }
 .menu-itam-holder .field-holder input[type="text"] { border: none; text-transform: initial; color: #aaaaaa; font-weight: 600; letter-spacing: 1px; border-bottom: 1px solid #ebedf3; padding: 0; font-size: 12px; height: 43px; line-height: 43px; -webkit-box-shadow: none; box-shadow: none; width: 100%; }
 .menu-itam-holder .field-holder:after { position: absolute; top: 10px; right: 2px; content: '\f002'; font-family: "icomoon"; color: #b0b1bd; font-size: 14px; }
-.menu-itam-holder .menu-itam-list { margin-bottom: 37px; }
+.menu-itam-holder .menu-itam-list { margin-bottom: 0px; }
 .menu-itam-holder .menu-itam-list:last-child { margin-bottom: 0; }
 .menu-itam-holder .element-title { display: block; margin-bottom: 22px; }
 .menu-itam-holder .element-title h5 { margin: 0 0 4px 0; font-weight: normal; text-decoration: underline; }

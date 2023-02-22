@@ -1,0 +1,83 @@
+@keyframes show-toast{
+    0% {bottom: -100%}
+    20% {bottom: 100px}
+    80% {bottom: 100px}
+    100% {bottom: -100%}
+}
+
+#home {
+    padding-bottom: 50px;
+}
+
+.show-notification{
+    position: fixed;
+    bottom: 100%;
+    right: 20px;
+    animation-name: show-toast;
+    animation-duration: 8s;
+    z-index: 99;
+}
+
+.btn{
+    padding: 2px 1.75em;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+table > tbody > tr > td{
+    border: none !important;
+}
+
+#opening_hours select{
+    padding: 5px 10px 5px 10px !important;
+}
+.btn-success.add_hour{
+    padding: 8px 15px 8px 15px;
+}
+
+.col-md-3.set_as_closed{
+    padding: 5px 15px 5px 15px;
+}
+
+/* hide radio button */
+.payment-method [type=radio]{
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Image style */
+.payment-method [type=radio] + img{
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* Checked style */
+.payment-method [type=radio]:checked + img{
+    outline: 2px solid #ff0000;
+}
+
+
+.main-search-bar{
+    padding-top: 200px !important;
+    padding-bottom: 150px !important;
+    background-position: center !important;
+}    
+ 
+
+@media only screen and (max-width: 480px) {
+    a.get-start-btn{
+        display: block;
+        margin-top: 15px !important;
+        margin-left: 0 !important;
+    }
+    .main-search-bar{
+        padding-top: 50px !important;
+        padding-bottom: 50px !important;
+        background-position: left !important;
+    }
+}
+
+
+

@@ -18,7 +18,7 @@ from django.utils.text import slugify
 # Create your views here.
 def registerUser(request):
     if request.user.is_authenticated:
-        messages.warning(request, 'You are lready logged in')
+        messages.warning(request, 'You are already logged in')
         return redirect('dashboard')
     elif request.method == "POST":
         print(request.POST)
