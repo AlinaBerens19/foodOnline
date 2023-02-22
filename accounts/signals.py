@@ -2,7 +2,7 @@ from django.db.models.signals import post_save, pre_save
 from .models import User, UserProfile
 from django.dispatch import receiver
 
-
+# ALINA
 
 # @receiver(post_save, sender=User, weak=False)
 # def post_save_create_profile_receiver(sender, instance, created, **kwargs):
