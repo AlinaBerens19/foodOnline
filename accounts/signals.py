@@ -4,17 +4,17 @@ from django.dispatch import receiver
 
 
 
-@receiver(post_save, sender=User, weak=False)
-def post_save_create_profile_receiver(sender, instance, created, **kwargs):
-    print(created)
-    if created:
-        UserProfile.objects.create(user=instance)
-    else:
-        try:
-            profile = UserProfile.objects.get(user=instance)
-            profile.save()
-        except:
-            UserProfile.objects.create(user=instance)
+# @receiver(post_save, sender=User, weak=False)
+# def post_save_create_profile_receiver(sender, instance, created, **kwargs):
+#     print(created)
+#     if created:
+#         UserProfile.objects.create(user=instance)
+#     else:
+#         try:
+#             profile = UserProfile.objects.get(user=instance)
+#             profile.save()
+#         except:
+#             UserProfile.objects.create(user=instance)
 
 
 
