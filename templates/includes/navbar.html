@@ -83,11 +83,11 @@ function getLocation() {
 }
 
 function showPosition(position) {
-  // var lat = position.coords.latitude
-  // var lng = position.coords.longitude
+  var lat = position.coords.latitude
+  var lng = position.coords.longitude
 
-  var lat = '38.67508494943184'
-  var lng = '-121.38585467888103'
+  // var lat = '38.67508494943184'
+  // var lng = '-121.38585467888103'
 
   var GOOGLE_API_KEY = "{{ GOOGLE_API_KEY }}"
   var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"+&key="+GOOGLE_API_KEY
